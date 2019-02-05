@@ -1,0 +1,14 @@
+{
+  "name": "jsqlphp",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+     "rsync:test": "rsync -rlzvc --stats --exclude-from '.rsync-ignore' --delete -e 'ssh -p 22' ./ root@145.239.6.132:/home/deployments/rsync/jsqlphp"
+  },
+  "author": "JSQL",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
