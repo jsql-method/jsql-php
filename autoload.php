@@ -1,15 +1,11 @@
 <?php
 
-// Debug config
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 // Libs
 require_once 'config/Config.php';
 require_once 'router/Router.php';
 require_once 'router/Handler.php';
 
+// Namespaces
 use JSQL\Config;
 use JSQL\Router;
 use JSQL\Handler;
@@ -18,6 +14,8 @@ use JSQL\Handler;
 $__CONFIG = new Config('dev');
 
 // Routes config
+$__ROUTE_PREFIX = '/api/jsql/';
+
 /**
  * Error handle: not allowed
  */
@@ -34,6 +32,9 @@ Router::e_methodNotAllowed( function() {
     die();
 });
 
+/**
+ * Error handle: not found
+ */
 Router::e_pathNotFound( function() {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found", true, 404);
     header('Content-Type: application/json');
@@ -48,62 +49,14 @@ Router::e_pathNotFound( function() {
 });
 
 /**
- * Select
+ * Routes generation
  */
-
-Router::add('/select', function() use ($__CONFIG) {
-    Handler::request_post(
-        'select',
-        $__CONFIG['KEYS']
-    );
-}, 'post');
-
-/**
- * Delete
- */
-Router::add('/delete', function() use ($__CONFIG) {
-    Handler::request_post(
-        'delete',
-        $__CONFIG['KEYS']
-    );
-}, 'post');
-
-/**
- * Update
- */
-Router::add('/update', function() use ($__CONFIG) {
-    Handler::request_post(
-        'update',
-        $__CONFIG['KEYS']
-    );
-}, 'post');
-
-/**
- * Insert
- */
-Router::add('/insert', function() use ($__CONFIG) {
-    Handler::request_post(
-        'insert',
-        $__CONFIG['KEYS']
-    );
-}, 'post');
-
-/**
- * Rollback
- */
-Router::add('/rollback', function() use ($__CONFIG) {
-    Handler::request_post(
-        'rollback',
-        $__CONFIG['KEYS']
-    );
-}, 'post');
-
-/**
- * Commit
- */
-Router::add('/commit', function() use ($__CONFIG) {
-    Handler::request_post(
-        'commit',
-        $__CONFIG['KEYS']
-    );
-}, 'post');
+foreach (['select', 'delete', 'update', 'insert', 'rollback', 'commit'] as $path) {
+    // Append new route
+    Router::add($__ROUTE_PREFIX . $path, function() use ($__CONFIG, $path) {
+        Handler::request_post(
+            $path,
+            $__CONFIG['KEYS']
+        );
+    }, 'post');
+}
