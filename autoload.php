@@ -14,7 +14,12 @@ use JSQL\Handler;
 $__CONFIG = new Config('dev');
 
 // Routes config
-$__ROUTE_PREFIX = '/api/jsql/';
+$__ROUTE = [];
+$__ROUTE['API']['DEFAULT_URI'] = 'https://provider.jsql.it';
+$__ROUTE['API']['DEFAULT_PREFIX'] = '/api/jsql/';
+
+$__ROUTE['API']['URI'] = $__CONFIG['DEV']['URI'] ?? $__ROUTE['API']['DEFAULT_URI'];
+$__ROUTE['API']['PREFIX'] = $__CONFIG['DEV']['PREFIX'] ?? $__ROUTE['API']['DEFAULT_PREFIX'];
 
 /**
  * Error handle: not allowed
@@ -53,9 +58,9 @@ Router::e_pathNotFound( function() {
  */
 foreach (['select', 'delete', 'update', 'insert', 'rollback', 'commit'] as $path) {
     // Append new route
-    Router::add($__ROUTE_PREFIX . $path, function() use ($__CONFIG, $path) {
+    Router::add([$__ROUTE['API']['PREFIX'], $path], function() use ($__CONFIG, $__ROUTE, $path) {
         Handler::request_post(
-            $path,
+            Router::toUri(false, $__ROUTE['API']['URI'], $__ROUTE['API']['DEFAULT_PREFIX'], $path),
             $__CONFIG['KEYS']
         );
     }, 'post');

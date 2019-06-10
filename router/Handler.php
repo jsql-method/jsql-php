@@ -8,9 +8,8 @@ namespace JSQL;
 class Handler
 {
     /**
-     * @var string Application url
+     * @var string Transaction id name
      */
-    public static $apiUri = "https://test-provider.jsql.it/api/jsql/";
     public static $txId = "txid";
 
     /**
@@ -56,7 +55,7 @@ class Handler
         // Curl handler
         $handler = curl_init();
         $responseHeaders = [];
-        curl_setopt($handler, CURLOPT_URL, self::$apiUri . $path);
+        curl_setopt($handler, CURLOPT_URL, $path);
         curl_setopt($handler, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($handler, CURLOPT_POSTFIELDS, $json);
         curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);

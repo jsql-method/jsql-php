@@ -79,7 +79,7 @@ class Router
      */
     private function _add($expression, $function, $method = 'get'){
         array_push($this->routes, Array(
-            'expression' => $expression,
+            'expression' => is_array($expression) ? Router::toUri(true, ...$expression) : $expression,
             'function' => $function,
             'method' => $method
         ));
@@ -202,5 +202,20 @@ class Router
     public static function run($basepath = '/')
     {
         Router::getInstance()->_run($basepath);
+    }
+
+    /**
+     * Method builds url from component strings
+     * @param string $components Url building components
+     */
+    public static function toUri($firstSlash = false, ...$components)
+    {
+        $uri = "";
+
+        foreach ($components as $component) {
+            $uri .= trim($component, '/') . '/';
+        }
+
+        return ($firstSlash ? '/' : '') . trim($uri, '/');
     }
 }
